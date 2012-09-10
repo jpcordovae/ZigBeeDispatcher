@@ -1,0 +1,10 @@
+#/bin/bash
+
+MODELS_FILE=/etc/domotic/models.xml
+CONFIG_FILE=/etc/domotic/domconfig.xml
+DISPATCHER=/usr/bin/dispatcher
+LUACONTROL_FILE=/etc/domotic/luacontrol.lua
+
+
+execv ${DISPATCHER}/dispatcher -m ${MODELS_FILE} -c ${CONFIG_FILE} --serial_port=/dev/ttyUSB0 -l ${LUACONTROL_FILE} 
+

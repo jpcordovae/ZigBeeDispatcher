@@ -1,0 +1,94 @@
+node type: Element, name: models
+node type: Element, name: EXT_001
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: INT_01
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+adding channel D0
+adding channel D1
+adding channel D2
+adding channel D3
+adding channel D4
+adding channel D5
+adding channel D6
+adding channel D7
+adding channel D8
+adding channel RSSI
+adding channel D0
+adding channel D1
+adding channel D2
+adding channel D3
+adding channel D4
+adding channel D5
+adding channel D6
+adding channel D7
+adding channel D8
+adding channel RSSI
+adding channel D0
+adding channel D1
+adding channel D2
+adding channel D3
+adding channel D4
+adding channel D5
+adding channel D6
+adding channel D7
+adding channel D8
+adding channel RSSI
+node type: Element, name: models
+node type: Element, name: EXT_001
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: INT_01
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+node type: Element, name: channel
+adding channel D0
+adding channel D1
+adding channel D2
+adding channel D3
+adding channel D4
+adding channel D5
+adding channel D6
+adding channel D7
+adding channel D8
+adding channel RSSI
+adding channel D0
+adding channel D1
+adding channel D2
+adding channel D3
+adding channel D4
+adding channel D5
+adding channel D6
+adding channel D7
+adding channel D8
+adding channel RSSI
+adding channel D0
+adding channel D1
+adding channel D2
+adding channel D3
+adding channel D4
+adding channel D5
+adding channel D6
+adding channel D7
+adding channel D8
+adding channel RSSI
+#command: 
+#command: exit
