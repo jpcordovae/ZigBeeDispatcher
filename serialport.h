@@ -6,7 +6,7 @@
  */
 
 #ifndef _SERIALPORT_H
-#define	_SERIALPORT_H
+#define _SERIALPORT_H
 
 #include <termios.h>
 #include <stdio.h>
@@ -46,18 +46,18 @@ public:
 
     struct SerialPortRuntimeError : std::runtime_error
     {
-        SerialPortRuntimeError() : runtime_error("serial port runtime error")
+    SerialPortRuntimeError() : runtime_error("serial port runtime error")
         {        }
     };
 
-    CSerialPort() : bIsConnected(false)
+CSerialPort() : bIsConnected(false)
     {}
 
-    CSerialPort(const std::string _sDev) : sDevice(_sDev) {  }
+CSerialPort(const std::string _sDev) : sDevice(_sDev) {  }
 
     bool OpenSerialPort(void);
 
-    bool OpenSerialPort(const std::string &_sDev) 
+    bool OpenSerialPort(const std::string &_sDev)
     {
         SetDevice(_sDev);
         return OpenSerialPort();
@@ -76,7 +76,7 @@ public:
     void addDataVector(std::vector<uint8_t> &_vctBuffer)
     {
         vctRawFrames.push_back(_vctBuffer);
-	DataCallBack(_vctBuffer);
+        DataCallBack(_vctBuffer);
     }
 
     void serialPortBufferEmpty(bool _b)
@@ -135,7 +135,7 @@ private:
     //void processTXBuffer(void);
     std::string sDevice; // device to open
     std::string sName;   // name of the device, to show
-    
+
     std::vector<uint8_t> vctBuffer; // raw data buffer
     std::vector<std::vector<uint8_t> > vctRawFrames; // raw frames buffer, dont have any check yet
 
@@ -156,4 +156,4 @@ typedef CSerialPort::SerialPortPtr SerialPortPtr;
 
 extern CSerialPort SerialPort;
 
-#endif	/* _SERIALPORT_H */
+#endif  /* _SERIALPORT_H */

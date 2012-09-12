@@ -1,4 +1,4 @@
 #include "czblog.hpp"
 
-CZBLog LOG;
+CZBLog *LOG;
 
