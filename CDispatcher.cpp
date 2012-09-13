@@ -8,6 +8,7 @@
 #include "czbframe.h"
 #include "DomBase.h"
 #include "czbconfiguration.h"
+#include "czblog.hpp"
 
 CDispatcher Dispatcher;
 
@@ -50,7 +51,8 @@ void CDispatcher::AddFrameToTransmit(std::vector<uint8_t> newframe)
     if(CZBFrame::getAPIIdentifierFromRFDataFrame(newframe)!=API_AT_REMOTE_COMMAND_REQUEST)
     {
         std::cerr << "AddFrameToTransmit: this is not a API_AT_REMOTE_COMMAND_REQUEST API identifier";
-        return;
+	//LOG->ERROR_WARNING_LOG("AddFrameToTransmit: this is not a API_AT_REMOTE_COMMAND_REQUEST API identifier");
+	return;
     }
 
     address.assign(newframe.begin()+5,newframe.end()+12);
@@ -190,7 +192,8 @@ void CDispatcher::processTX(void)
     }
 }
 
-void CDispatcher::AddNewEndDevice(const std::string &name, const std::vector<uint8_t> &vctAddress){
+void CDispatcher::AddNewEndDevice(const std::string &name, const std::vector<uint8_t> &vctAddress)
+{
     this->mapEndDevices[name] = CZBEndDevicePtr(new CZBEndDevice(name,vctAddress));
     CZBEndDevicePtr ptr = mapEndDevices[name];
     ptr->AddDataChannel("D0");
@@ -203,6 +206,7 @@ void CDispatcher::AddNewEndDevice(const std::string &name, const std::vector<uin
     ptr->AddDataChannel("D7");
     ptr->AddDataChannel("D8");
     ptr->AddDataChannel("RSSI");
+    LOG->INFO_LOG("Added new end device");
     EDListChangedCallBack(getZBEDListNames());
 }
 

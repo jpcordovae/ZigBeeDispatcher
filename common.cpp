@@ -37,28 +37,28 @@ std::ostream& operator<<(std::ostream &_output, const std::vector<uint8_t> &_vec
     return _output;
 }
 
-std::vector<std::string> tokenize(const std::string &_line,const char *_delimeter){
-	std::vector<std::string> Tokens;
-	
-	if(_line.empty()) return Tokens;
-	
-	std::string str;
+std::vector<std::string> tokenize(const std::string &_line,const char *_delimeter)
+{
+    std::vector<std::string> Tokens;
 
-	BOOST_FOREACH(char c,_line)
-	{
-		if(c==*_delimeter)
-		{
-			Tokens.push_back(str);
-			str.clear();
-			continue;
-		}
-		str += c;
-	}
-	
-	if(!str.empty())
-		Tokens.push_back(str);
+    if(_line.empty()) return Tokens;
 
-	return Tokens;
+    std::string str;
+
+    BOOST_FOREACH(char c,_line){
+        if(c==*_delimeter)
+        {
+            Tokens.push_back(str);
+            str.clear();
+            continue;
+        }
+        str += c;
+    }
+
+    if(!str.empty())
+        Tokens.push_back(str);
+
+    return Tokens;
 }
 
 

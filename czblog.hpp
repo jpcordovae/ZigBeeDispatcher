@@ -16,21 +16,24 @@
 
 class CZBLog
 {
+    
 public:
-    enum LOG_LEVEL { ERROR_CRITICAL, ERROR_WARNING, WARNING, DATA };
+    enum LOG_LEVEL { ERROR_CRITICAL, ERROR_WARNING, WARNING, DATA , INFO };
 
     struct message_unit
     {
 	boost::uint8_t msg[LOG_MSG_BUFFER_SIZE]; //TODO: check if this make a memory leack
+	
 	message_unit()
 	{
 	    bzero(msg,LOG_MSG_BUFFER_SIZE);
 	}
+	
 	void operator <<(const char *)
 	{
 	    //
 	}
-	//message_unit()
+	
 	boost::posix_time::ptime timestamp;
     };
     
@@ -53,10 +56,10 @@ public:
 	    break;
 	default:
 	    {
-		{
+		//{
 		    boost::mutex::scoped_lock m(_config_mutex);
 		    if( !_save_log_to_file || !_save_log ) return;
-		}
+		    //}
 		boost::mutex::scoped_lock n(_data_mutex);
 		_log_queue.push(_msg_ptr);
 	    }
@@ -73,7 +76,7 @@ public:
 	    _data_file.close();
 	}
 
-	_data_file.open(_data_file_name);
+	_data_file.open(_data_file_name,std::fstream::in | std::fstream::out | std::fstream::app);
 
 	if(!_data_file.is_open())
 	{
@@ -100,7 +103,7 @@ public:
 	    _log_file.close();
 	}
 	
-	_log_file.open(_log_file_name);
+	_log_file.open(_log_file_name,std::fstream::in | std::fstream::out | std::fstream::app);
 	
 	if(!_log_file.is_open())
 	{
@@ -185,8 +188,41 @@ public:
     void LOGDATA(std::vector<boost::uint8_t> _data)
     {
 	CZBLog::message_unit_ptr msg_ptr( new CZBLog::message_unit() );
-	memcpy(msg_ptr->msg,(void *)_data.front(),_data.size());// this can be done because the vector store the data in a contiguous memory area
+	std::string sTmp;
+	unsigned int k = 0;
+	while( _data.size() > k )
+	{
+	    try{
+	    sTmp += boost::lexical_cast<std::string>(_data[k++]);
+	    }catch(std::exception &e)
+	    {
+		std::cerr << e.what() << std::endl;
+		continue;
+	    }
+	}
+	memcpy(msg_ptr->msg,sTmp.c_str(),_data.size());// this can be done because the vector store the data in a contiguous memory area
 	log(LOG_LEVEL::DATA,msg_ptr);
+    }
+
+    void ERROR_WARNING_LOG(char *_msg)
+    {
+	message_unit_ptr msg_ptr( new message_unit() );
+	memcpy(msg_ptr->msg,_msg,strlen(_msg));
+	log(LOG_LEVEL::ERROR_WARNING,msg_ptr);
+    }
+
+    void WARNING_LOG(char *_msg)
+    {
+	message_unit_ptr msg_ptr( new message_unit() );
+	memcpy(msg_ptr->msg,_msg,strlen(_msg));
+	log(LOG_LEVEL::WARNING,msg_ptr);
+    }
+
+    void INFO_LOG(char *_msg)
+    {
+	message_unit_ptr msg_ptr( new message_unit() );
+	memcpy(msg_ptr->msg,_msg,strlen(_msg));
+	log(LOG_LEVEL::INFO,msg_ptr);
     }
     
 private:
@@ -204,6 +240,7 @@ private:
     std::fstream _log_file;
     bool _thread_exit;
     //boost::posix_time::milliseconds _sleep_time_milliseconds;
+
 };
 
 extern CZBLog *LOG;
