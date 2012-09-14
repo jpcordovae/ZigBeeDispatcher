@@ -206,7 +206,7 @@ void CDispatcher::AddNewEndDevice(const std::string &name, const std::vector<uin
     ptr->AddDataChannel("D7");
     ptr->AddDataChannel("D8");
     ptr->AddDataChannel("RSSI");
-    LOG->INFO_LOG("Added new end device");
+    LOG.INFO_LOG("Added new end device");
     EDListChangedCallBack(getZBEDListNames());
 }
 

@@ -23,18 +23,7 @@ public:
     struct message_unit
     {
 	boost::uint8_t msg[LOG_MSG_BUFFER_SIZE]; //TODO: check if this make a memory leack
-	
-	message_unit()
-	{
-	    bzero(msg,LOG_MSG_BUFFER_SIZE);
-	}
-	
-	void operator <<(const char *)
-	{
-	    //
-	}
-	
-	boost::posix_time::ptime timestamp;
+	message_unit( ) { bzero(msg,LOG_MSG_BUFFER_SIZE); }
     };
     
     typedef boost::shared_ptr<message_unit> message_unit_ptr;
@@ -56,10 +45,10 @@ public:
 	    break;
 	default:
 	    {
-		//{
+		{
 		    boost::mutex::scoped_lock m(_config_mutex);
 		    if( !_save_log_to_file || !_save_log ) return;
-		    //}
+		}
 		boost::mutex::scoped_lock n(_data_mutex);
 		_log_queue.push(_msg_ptr);
 	    }
@@ -200,7 +189,7 @@ public:
 		continue;
 	    }
 	}
-	memcpy(msg_ptr->msg,sTmp.c_str(),_data.size());// this can be done because the vector store the data in a contiguous memory area
+	memcpy(msg_ptr->msg,sTmp.c_str(),sTmp.length());// this can be done because the vector store the data in a contiguous memory area
 	log(LOG_LEVEL::DATA,msg_ptr);
     }
 
@@ -243,7 +232,7 @@ private:
 
 };
 
-extern CZBLog *LOG;
+extern CZBLog LOG;
 
 
 #endif

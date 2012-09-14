@@ -48,17 +48,17 @@ void ProcessLine(const std::string &_line)
 
 int main(void)
 {
-    LOG = new CZBLog();
-    LOG->set_log_file("log.txt");
-    LOG->set_data_file("data.txt");
-    LOG->set_save_data(true);
-    LOG->set_save_log(true);
+    //LOG = new CZBLog();
+    LOG.set_log_file("log.txt");
+    LOG.set_data_file("data.txt");
+    LOG.set_save_data(true);
+    LOG.set_save_log(true);
 
     // .
     SerialPort.SetDevice("/dev/ttyUSB0");
     CD = new CDispatcher();
     SerialPort.addDataCallBack(boost::bind(&CDispatcher::CheckAndAddRawFrames,CD,_1));
-    SerialPort.addDataCallBack(boost::bind(&CZBLog::LOGDATA,LOG,_1));
+    SerialPort.addDataCallBack(boost::bind(&CZBLog::LOGDATA,&LOG,_1));
     //SerialPort.addDataCallBack(boost::bind(ShowVectorUINT8,_1));
     SerialPort.OpenSerialPort();
 
@@ -74,9 +74,6 @@ int main(void)
     }
 
     //multithread safe delete :)
-    CZBLog *logTMP = LOG;
-    LOG = NULL;
-    delete logTMP;
 
     exit(EXIT_SUCCESS);
 }
