@@ -26,7 +26,7 @@ public:
 
     CZBEndDevice();
     CZBEndDevice(const CZBEndDevice& orig);
-    CZBEndDevice(const std::string &name, const std::vector<uint8_t> &_vctAddress);
+    CZBEndDevice(const std::string &name, data_vct_ptr _vctAddress);
     virtual ~CZBEndDevice();
     void UpdateConfig(std::string _sItem, uint8_t *_Value, size_t _buffersize);
     std::string GetConfigValue(std::string); // get the value in the configuration
@@ -36,13 +36,13 @@ public:
 
     // TX buffer
     void freeFrameID(uint8_t frameID);
-    bool searchFrame(std::vector<uint8_t> __vctToSearch);
+    bool searchFrame(data_vct_ptr __vctToSearch);
     bool checkFrameID(uint8_t _frameID);
     uint8_t getReserveFrameID(void);
     void addTXBuffer(uint8_t,stTXFrame);
     void setEnFrameStatus(uint8_t,enFrameStatus);
     void setStTxFrame(uint8_t,stTXFrame);
-    std::vector<uint8_t> getFrameIDVector(void);
+    data_vct_ptr getFrameIDVector(void);
     stTXFrame get_stTXFrame(size_t);
 
     // enable / disable

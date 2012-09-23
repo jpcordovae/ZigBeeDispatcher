@@ -3,6 +3,7 @@
 #include "common.h"
 #include <limits.h>
 #include <pthread.h>
+#include "czblog.hpp"
 
 CSerialPort SerialPort;
 
@@ -26,7 +27,7 @@ bool CSerialPort::OpenSerialPort()
     sigaction(SIGPIPE, &saio, NULL);
     sigaction(SIGINT, &saio, NULL);
     sigaction(SIGSEGV, &saio, NULL);
-    /* allow the process to receive SIGIO */
+    /* allow the process to receive SIGIO*/
     fcntl(fdSP, F_SETOWN, getpid());
     /* Make the file descriptor asynchronous (the manual page says only that F_SETFL only work with O_APPEND and O_NONBLOCK) */
     fcntl(fdSP, F_SETFL, FASYNC);
@@ -45,23 +46,29 @@ bool CSerialPort::OpenSerialPort()
     return true;
 }
 
-int CSerialPort::SendBuffer(std::vector<uint8_t> __vct)
+size_t CSerialPort::SendBuffer(data_vct_ptr _vct)
 {
-    std::vector<uint8_t> vctTmp = __vct; // this because  the thread kill the memory of the data
-    return write(fdSP,&(vctTmp[0]),vctTmp.size());
+    return write(fdSP,(void *)_vct->at(0),_vct->size());
 }
+
+/*int CSerialPort::SendBuffer(std::vector<boost::uint8_t> &_vct)
+{
+    return write(fdSP,(void *)_vct.at(0),_vct.size());
+}*/
 
 void signal_handler_IO(int _status)
 {
     static uint8_t buffer[PIPE_BUF];
     int buffersize, fd_sp;
-    static std::vector<uint8_t> vctBuffer;
-    switch (_status) {
+    data_vct_ptr vctBuffer( new std::vector<boost::uint8_t>() );
+    switch (_status)
+    {
     case SIGIO:
         // READ
         memset(buffer, 0, PIPE_BUF);
         buffersize = 0;
         fd_sp = SerialPort.GetFileDescriptor();
+	
         if( (buffersize = read(fd_sp,buffer,PIPE_BUF))==0)
         {
             break;
@@ -69,21 +76,23 @@ void signal_handler_IO(int _status)
 
         try{
 
-            for(int k=0;k<buffersize;k++)
+            for(ssize_t k=0;k<buffersize;k++)
             {
-                if( (buffer[k] == 0x7E) && !vctBuffer.empty() )
+		//printf("%02x:",buffer[k]);
+                if( (buffer[k] == 0x7E) && !vctBuffer->empty() )
                 {
-                    SerialPort.addDataVector(vctBuffer);
-                    vctBuffer.clear();
-                }
-                vctBuffer.push_back(buffer[k]);
+		    LOG.LOGDATA(vctBuffer);
+                    //SerialPort.addDataVector(vctBuffer);
+                    vctBuffer = data_vct_ptr(new std::vector<boost::uint8_t>()); // get a new vector to store data incoming from serial port
+		    vctBuffer->clear();
+		}
+                vctBuffer->push_back(buffer[k]);
             }
 
         }catch(CSerialPort::SerialPortRuntimeError &e)
         {
             perror(e.what());
         }
-        //SerialPort.serialPortBufferEmpty(true);
 
         break;
     case SIGINT: // Interactive attention

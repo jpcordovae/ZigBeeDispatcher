@@ -32,24 +32,24 @@ public:
         {}
     };
 
-    void AddFrameToTransmit(std::vector<uint8_t> new_frame);
+    void AddFrameToTransmit(data_vct_ptr new_frame);
     void processTX(void);
-    void AddNewEndDevice(const std::string &name, const std::vector<uint8_t> &vctAddress);
-    void addRFFrame(const std::vector<uint8_t> );
-    void Function_API_RX_IO_DATA_64bit_ADDRESS( std::vector<uint8_t> );
-    void Function_API_AT_REMOTE_COMMAND_RESPONSE(std::vector<uint8_t> _vctRFData);
-    void SendCommand(const std::string &_sEDName, const std::vector<uint8_t> _vctCommand, const std::vector<uint8_t> _vctRFData);
-    uint8_t calculateChechSumUINT8(std::vector<uint8_t> &_vctBuffer);
-    void Function_API_AT_REMOTE_COMMAND_REQUEST(const std::string &_sEDName, const std::vector<uint8_t> _vctCommand, const std::vector<uint8_t> _vctRFData);
-    void Function_API_AT_REMOTE_COMMAND_REQUEST(const std::vector<uint8_t> &address, const std::vector<uint8_t> &_vctCommand, const std::vector<uint8_t> &_vctRFData);
-    void Function_API_TX_REQUEST_64bit_ADDRESS( std::vector<uint8_t> );
-    void ReadSample(std::vector<uint8_t> &, std::vector<uint8_t> &_vctAddress/* ZBED address */);
+    void AddNewEndDevice(const std::string &name, data_vct_ptr vctAddress);
+    void addRFFrame(data_vct_ptr);
+    void Function_API_RX_IO_DATA_64bit_ADDRESS( data_vct_ptr );
+    void Function_API_AT_REMOTE_COMMAND_RESPONSE(data_vct_ptr _vctRFData);
+    void SendCommand(const std::string &_sEDName, data_vct_ptr _vctCommand, data_vct_ptr _vctRFData);
+    uint8_t calculateChechSumUINT8(data_vct_ptr _vctBuffer);
+    void Function_API_AT_REMOTE_COMMAND_REQUEST(const std::string &_sEDName, data_vct_ptr _vctCommand, data_vct_ptr _vctRFData);
+    void Function_API_AT_REMOTE_COMMAND_REQUEST(data_vct_ptr address, data_vct_ptr _vctCommand, data_vct_ptr _vctRFData);
+    void Function_API_TX_REQUEST_64bit_ADDRESS( data_vct_ptr );
+    void ReadSample(data_vct_ptr, data_vct_ptr _vctAddress/* ZBED address */);
     void AddDataToZBED( CZBEndDevicePtr zbptr, const std::string & sDataChannel, const uint16_t u16d, const ptime &_ptime);
-    void CheckAndAddRawFrames(std::vector<uint8_t> _vctRawBuffer);
-    CZBEndDevicePtr getZBEndDeviceByAddress(const std::vector<uint8_t> &_vctAddress);
+    void CheckAndAddRawFrames(data_vct_ptr _vctRawBuffer);
+    CZBEndDevicePtr getZBEndDeviceByAddress(data_vct_ptr _vctAddress);
     CZBEndDevicePtr getZBEndDeviceByName(const std::string &_name);
     std::vector<std::string> getZBEDListNames(void);
-    std::vector<uint8_t> GetEndDeviceAddressByName(std::string &_sName);
+    data_vct_ptr GetEndDeviceAddressByName(std::string &_sName);
     boost::signals2::connection setDataCallback(const std::string &_sName, CEndDevice::signalChannel::slot_type &_subscriber);
 
     // signal connections

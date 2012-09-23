@@ -46,20 +46,19 @@ void ProcessLine(const std::string &_line)
     if(token[0].compare("show_channels")==0) ShowChannels();
 }
 
-int main(void)
+int main(int argv, char *argc[])
 {
-    //LOG = new CZBLog();
-    LOG.set_log_file("log.txt");
-    LOG.set_data_file("data.txt");
+    LOG.set_log_file("log/log.txt");
+    LOG.set_data_file("log/data.txt");
     LOG.set_save_data(true);
     LOG.set_save_log(true);
 
-    // .
-    SerialPort.SetDevice("/dev/ttyUSB0");
-    CD = new CDispatcher();
-    SerialPort.addDataCallBack(boost::bind(&CDispatcher::CheckAndAddRawFrames,CD,_1));
-    SerialPort.addDataCallBack(boost::bind(&CZBLog::LOGDATA,&LOG,_1));
-    //SerialPort.addDataCallBack(boost::bind(ShowVectorUINT8,_1));
+    SerialPort.SetDevice(argc[1]);
+    //CD = new CDispatcher();
+    //SerialPort.addDataCallBack(boost::bind(&CDispatcher::CheckAndAddRawFrames,CD,_1));
+    //SerialPort.addDataCallBack(boost::bind(&CZBLog::LOGDATA,&LOG,_1));
+    //SerialPort.addDataCallBack(LogData);
+    //SerialPort.addDataCallBack(&ShowVectorUINT8);
     SerialPort.OpenSerialPort();
 
     //char line[1024];

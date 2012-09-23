@@ -11,28 +11,42 @@ void ShowUINT8(uint8_t _d )
     //std::cout << std::hex << (unsigned short)_d;
 }
 
-//void ShowVectorUINT8(std::vector<uint8_t> &_vct)
-//{
-//    std::for_each(_vct.begin(),_vct.end(),ShowUINT8);
-//}
-
-void ShowVectorUINT8(std::vector<uint8_t> _vct)
+void ShowVectorUINT8(std::vector<uint8_t> &_vct)
 {
     std::for_each(_vct.begin(),_vct.end(),ShowUINT8);
-    std::cout << std::endl;
 }
 
-void ShowBufferOfVectorsUINT8( std::vector<std::vector<uint8_t> > &_vct )
+void ShowVectorUINT8(data_vct_ptr _vct)
 {
-    printf("Bufferef vector of vectors : \n");
-    std::for_each(_vct.begin(),_vct.end(),ShowVectorUINT8);
-    //TODO: incomplete implementation !!!
+    std::for_each(_vct->begin(),_vct->end(),ShowUINT8);
+    //std::cout << std::endl;
 }
 
-std::ostream& operator<<(std::ostream &_output, const std::vector<uint8_t> &_vector)
+std::ostream& operator<<(std::ostream &_output, std::vector<uint8_t> &_vector)
 {
-    BOOST_FOREACH(uint8_t ui,_vector){
+    BOOST_FOREACH(uint8_t ui,_vector)
+    {
         _output << std::hex << (unsigned short)ui << ":";
+    }
+    return _output;
+}
+
+std::ostream& operator<<(std::ostream &_output, data_vct_ptr _vector)
+{
+    std::vector<uint8_t>::iterator it = (*_vector).begin();
+    for(;it!=(*_vector).end();++it)
+    {
+	_output << (unsigned short)(*it);
+    }
+    return _output;
+}
+
+std::ostream& operator<<(std::ostream &_output, data_unit_ptr _data_unit)
+{
+    std::vector<uint8_t>::iterator it = _data_unit->databuffer_ptr->begin();
+    for( ; it != _data_unit->databuffer_ptr->end() ; ++it )
+    {
+	_output << (unsigned short)(*it);
     }
     return _output;
 }

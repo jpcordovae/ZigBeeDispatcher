@@ -17,6 +17,7 @@ CEndDevice::CEndDevice() {
 }
 
 CEndDevice::CEndDevice(const CEndDevice& orig) {
+    
 }
 
 CEndDevice::~CEndDevice( ) {
@@ -30,7 +31,8 @@ std::string CEndDevice::GetName(void) {
     return sName;
 }
 
-void CEndDevice::AddDataChannel(const std::string &_sDataChannel) {
+void CEndDevice::AddDataChannel(const std::string &_sDataChannel)
+{
     mapDataContainer.insert(std::pair<std::string,ContainerPtr>(_sDataChannel,ContainerPtr(new std::vector<EDDATA>)));
     std::cout << "adding channel " << _sDataChannel << std::endl;
 }
@@ -46,12 +48,13 @@ size_t CEndDevice::GetDataChannelCount(std::string _sDataChannel) {
 ////    return vTmp->at(_stPosition);
 //}
 
-size_t CEndDevice::getChannelCount(void) {
+size_t CEndDevice::getChannelCount(void)
+{
     return mapDataContainer.size();
 }
 
-std::vector<std::string> CEndDevice::getChannelNames(void) {
-
+std::vector<std::string> CEndDevice::getChannelNames(void)
+{
     std::vector<std::string> vctNames;
     std::map<std::string,ContainerPtr >::iterator it;
 
@@ -63,22 +66,26 @@ std::vector<std::string> CEndDevice::getChannelNames(void) {
     return vctNames;
 }
 
-void CEndDevice::getSaveData(const bool _bSaveData) { // save data ?
+void CEndDevice::getSaveData(const bool _bSaveData) // save data ?
+{ 
     bSaveData = _bSaveData;
 }
 
-bool CEndDevice::getSaveData(void) { // it's saving data?
+bool CEndDevice::getSaveData(void) // it's saving data?
+{ 
     return bSaveData;
 }
 
-uint16_t CEndDevice::GetLastData(const std::string &_sDataChannel) {
-    
+uint16_t CEndDevice::GetLastData(const std::string &_sDataChannel)
+{
     std::map<std::string,ContainerPtr>::iterator it;
     it = mapDataContainer.find(_sDataChannel);
-
+    
     if( it==mapDataContainer.end() || mapDataContainer.empty() )
+    {
         return 0x0000;
-
+    }
+    
     ContainerPtr cptr = it->second;
 
     if(cptr->empty())
@@ -111,19 +118,25 @@ bool CEndDevice::AddData(const std::string &_sDataChannel, const uint16_t &_data
     return true;
 }
 
-std::vector<uint8_t> CEndDevice::GetAddress(void) {
+data_vct_ptr CEndDevice::GetAddress(void)
+{
     return vctAddress;
 }
 
-void CEndDevice::SetAddress(const std::vector<uint8_t> &_vctAddress)
+void CEndDevice::SetAddress(data_vct_ptr _vctAddress)
 {
-    vctAddress.clear();
-    vctAddress.assign(_vctAddress.begin(),_vctAddress.end());
+    if(vctAddress->empty())
+    {
+	//TODO: log this :)
+    }
+    
+    vctAddress->clear();
+    vctAddress->assign(_vctAddress->begin(),_vctAddress->end());
 }
 
-bool CEndDevice::CompareAddress(const std::vector<uint8_t> &_vctAddress)
+bool CEndDevice::CompareAddress(data_vct_ptr _vctAddress)
 {
-    return vctAddress==_vctAddress;
+    return (*vctAddress)==(*_vctAddress);
 }
 
 bool CEndDevice::CompareName(const std::string &_sName) {
@@ -132,7 +145,7 @@ bool CEndDevice::CompareName(const std::string &_sName) {
     return false;
 }
 
-void CEndDevice::sendSignalDataChange(std::string _edName, std::string _channels, EDDATA _edData)
+/*void CEndDevice::sendSignalDataChange(std::string _edName, std::string _channels, EDDATA _edData)
 {
     // .
-}
+    }*/

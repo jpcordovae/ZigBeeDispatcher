@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "common.h"
-#include "CDispatcher.h"
+//#include "CDispatcher.h"
 
 void *ThreadTX(void *_arg);
 
@@ -38,10 +38,8 @@ class CSerialPort
 
 public:
 
-    typedef boost::signals2::signal< void (std::vector<uint8_t> & )> signalDataCallBack;
-    typedef boost::signals2::signal< void (std::vector<std::vector<uint8_t> > & )> signalVectorDataCallBack;
+    typedef boost::signals2::signal< void ( data_vct_ptr )> signalDataCallBack;
     typedef boost::signals2::signal< void (bool) > signalConnectionStatus;
-
     typedef boost::shared_ptr<CSerialPort> SerialPortPtr;
 
     struct SerialPortRuntimeError : std::runtime_error
@@ -68,30 +66,15 @@ CSerialPort(const std::string _sDev) : sDevice(_sDev) {  }
         if(buffersize<=0) return;
         for( size_t i=0;i<buffersize;i++)
         {
-            vctBuffer.push_back(buffer[i]);
+            vctBuffer->push_back(buffer[i]);
         }
         DataCallBack(vctBuffer);
     }
 
-    void addDataVector(std::vector<uint8_t> &_vctBuffer)
+    void addDataVector(data_vct_ptr _vctBuffer)
     {
-        vctRawFrames.push_back(_vctBuffer);
         DataCallBack(_vctBuffer);
     }
-
-    void serialPortBufferEmpty(bool _b)
-    {
-        if(_b)
-        {
-            BOOST_FOREACH(std::vector<uint8_t> _vct,vctRawFrames)
-            {
-                DataCallBack(_vct);
-            }
-            vctRawFrames.clear();
-        }
-    }
-
-    std::vector<std::vector<uint8_t> > getFramesBuffer(void) { return vctRawFrames; }
 
     void SetDevice(std::string _sDev) { sDevice = _sDev; }
 
@@ -105,15 +88,11 @@ CSerialPort(const std::string _sDev) : sDevice(_sDev) {  }
         ConnectionStatusCallBack.connect(subscriber);
     }
 
-    void addVectorDataCallBack( signalVectorDataCallBack::slot_type subscriber )
-    {
-        VectorDataCallBack.connect(subscriber);
-    }
-
     int GetFileDescriptor(void) { return fdSP; };
 
-    int SendBuffer(std::vector<uint8_t> __vct);
-
+    size_t SendBuffer(data_vct_ptr __vct);
+    //int SendBuffer(std::vector<boost::uint8_t> &_vct);
+    
     void CloseSerialPort(void)
     {
         close(fdSP);
@@ -123,27 +102,18 @@ CSerialPort(const std::string _sDev) : sDevice(_sDev) {  }
 
     ~CSerialPort()
     {
-        vctBuffer.empty();
+        vctBuffer->clear();
         ConnectionStatusCallBack(false); // be carefull with sw shutdown
         close(fdSP);
-        //pthread_mutex_destroy(&mutex_serial_port);
     }
 
-    //pthread_mutex_t mutex_serial_port;
-
 private:
-    //void processTXBuffer(void);
     std::string sDevice; // device to open
     std::string sName;   // name of the device, to show
 
-    std::vector<uint8_t> vctBuffer; // raw data buffer
-    std::vector<std::vector<uint8_t> > vctRawFrames; // raw frames buffer, dont have any check yet
-
+    data_vct_ptr vctBuffer; // raw data buffer
     signalDataCallBack DataCallBack; // new data arrive
     signalConnectionStatus ConnectionStatusCallBack; // change in connection status
-    signalVectorDataCallBack VectorDataCallBack;
-
-    //std::vector<std::vector<uint8_t> > vctTXbuffer;
     int fdSP; // serial port file descriptor
     struct sigaction saio; // definition of signal action
     bool bIsConnected;

@@ -12,4 +12,4 @@ dispatcher: ${OBJECTS} ${MAIN_SOURCES}
 	${CC} $(LDFLAGS) ${OBJECTS} ${MAIN_SOURCES} -lm -o $(@)
 
 clean:
-	rm *.o dispatcher *~
+	rm *.o dispatcher 

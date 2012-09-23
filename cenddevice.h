@@ -52,9 +52,9 @@ public:
     std::string GetName(void);
 
     // Address
-    std::vector<uint8_t> GetAddress(void);
-    void SetAddress(const std::vector<uint8_t> &);
-    bool CompareAddress(const std::vector<uint8_t> &_vctAddress);
+    data_vct_ptr GetAddress(void);
+    void SetAddress(data_vct_ptr);
+    bool CompareAddress(data_vct_ptr _vctAddress);
     bool CompareName(const std::string &_sName);
 
     // channels
@@ -78,12 +78,12 @@ public:
         return DataChangeCallBack.connect(_subscriber);
     }
 
-    void sendSignalDataChange(std::string _edName, std::string _channels, EDDATA _edData);
+    //void sendSignalDataChange(std::string _edName, std::string _channels, EDDATA _edData);
 
 private:
     std::string sName; // ordinary name of the device.
     bool bSaveData; // the ED will save the data?
-    std::vector<uint8_t> vctAddress;
+    data_vct_ptr vctAddress;
     enAddressLenght enAL;
     signalChannel DataChangeCallBack;
     boost::mutex mutex;
