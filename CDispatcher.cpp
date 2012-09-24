@@ -7,7 +7,7 @@
 #include "serialport.h"
 #include "czbframe.h"
 #include "DomBase.h"
-#include "czbconfiguration.h"
+//#include "czbconfiguration.h"
 #include "czblog.hpp"
 
 CDispatcher Dispatcher;

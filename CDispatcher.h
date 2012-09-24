@@ -6,7 +6,7 @@
 #include "czbenddevice.h"
 #include "cevent.h"
 #include "czbframe.h"
-#include "czbconfiguration.h"
+//#include "czbconfiguration.h"
 
 #include <vector>
 #include <stdint.h>
@@ -80,7 +80,7 @@ private:
     //CEvent<int> fail_frames(0,5);
     std::vector<CZBFramePtr> RFFrameBuffer;
     boost::mutex rfbuffer_mutex;
-    CZBConfiguration *Config;
+    //CZBConfiguration *Config;
 };
 
 typedef CDispatcher::CDispatcherPtr CDispatcherPtr;

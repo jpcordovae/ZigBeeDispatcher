@@ -1,13 +1,15 @@
 #include <iostream>
-#include "CDispatcher.h"
-#include "serialport.h"
+//#include "CDispatcher.h"
+//#include "serialport.h"
 #include "common.h"
 #include "czblog.hpp"
+#include "czbdb.hpp"
 
 bool bExit=false;
-CDispatcher *CD=NULL;
+//CDispatcher *CD=NULL;
+extern CZBDataBase *DB;
 
-void ShowEndDevices(void)
+/*void ShowEndDevices(void)
 {
     if(!CD) return;
     std::cout << "EndDevice List" << std::endl;
@@ -45,22 +47,24 @@ void ProcessLine(const std::string &_line)
     if(token[0].compare("show_ed")==0)  ShowEndDevices();
     if(token[0].compare("show_channels")==0) ShowChannels();
 }
+*/
 
 int main(void)
 {
+    DB = new CZBDataBase();
+    DB->connect();
     //LOG = new CZBLog();
     LOG.set_log_file("log.txt");
     LOG.set_data_file("data.txt");
     LOG.set_save_data(true);
     LOG.set_save_log(true);
 
-    // .
-    SerialPort.SetDevice("/dev/ttyUSB0");
-    CD = new CDispatcher();
-    SerialPort.addDataCallBack(boost::bind(&CDispatcher::CheckAndAddRawFrames,CD,_1));
-    SerialPort.addDataCallBack(boost::bind(&CZBLog::LOGDATA,&LOG,_1));
+    //SerialPort.SetDevice("/dev/ttyUSB0");
+    //CD = new CDispatcher();
+    //SerialPort.addDataCallBack(boost::bind(&CDispatcher::CheckAndAddRawFrames,CD,_1));
+    //SerialPort.addDataCallBack(boost::bind(&CZBLog::LOGDATA,&LOG,_1));
     //SerialPort.addDataCallBack(boost::bind(ShowVectorUINT8,_1));
-    SerialPort.OpenSerialPort();
+    //SerialPort.OpenSerialPort();
 
     //char line[1024];
     while(!bExit)
