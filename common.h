@@ -27,6 +27,8 @@
 #include <iostream>
 #include <vector>
 
+typedef boost::shared_ptr<std::string> string_ptr;
+
 void ShowUINT8(uint8_t _d );
 void ShowVectorUINT8(std::vector<uint8_t> );
 void ShowBufferOfVectorsUINT8( std::vector<std::vector<uint8_t> > &_vct );

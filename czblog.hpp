@@ -65,7 +65,7 @@ public:
 	    _data_file.close();
 	}
 
-	_data_file.open(_data_file_name,std::fstream::in | std::fstream::out | std::fstream::app);
+	_data_file.open(_data_file_name.c_str(),std::fstream::in | std::fstream::out | std::fstream::app);
 
 	if(!_data_file.is_open())
 	{
@@ -92,7 +92,7 @@ public:
 	    _log_file.close();
 	}
 	
-	_log_file.open(_log_file_name,std::fstream::in | std::fstream::out | std::fstream::app);
+	_log_file.open(_log_file_name.c_str(),std::fstream::in | std::fstream::out | std::fstream::app);
 	
 	if(!_log_file.is_open())
 	{
@@ -190,28 +190,28 @@ public:
 	    }
 	}
 	memcpy(msg_ptr->msg,sTmp.c_str(),sTmp.length());// this can be done because the vector store the data in a contiguous memory area
-	log(LOG_LEVEL::DATA,msg_ptr);
+	log(DATA,msg_ptr);
     }
 
     void ERROR_WARNING_LOG(char *_msg)
     {
 	message_unit_ptr msg_ptr( new message_unit() );
 	memcpy(msg_ptr->msg,_msg,strlen(_msg));
-	log(LOG_LEVEL::ERROR_WARNING,msg_ptr);
+	log(ERROR_WARNING,msg_ptr);
     }
 
     void WARNING_LOG(char *_msg)
     {
 	message_unit_ptr msg_ptr( new message_unit() );
 	memcpy(msg_ptr->msg,_msg,strlen(_msg));
-	log(LOG_LEVEL::WARNING,msg_ptr);
+	log(WARNING,msg_ptr);
     }
 
     void INFO_LOG(char *_msg)
     {
 	message_unit_ptr msg_ptr( new message_unit() );
 	memcpy(msg_ptr->msg,_msg,strlen(_msg));
-	log(LOG_LEVEL::INFO,msg_ptr);
+	log(INFO,msg_ptr);
     }
     
 private:
