@@ -19,24 +19,6 @@ CDispatcher::CDispatcher()
     std::string edname = "local";
     std::vector<uint8_t> vctAddress;
     AddNewEndDevice(edname, vctAddress); // local end device
-
-    vctAddress.push_back(0x00);
-    vctAddress.push_back(0x13);
-    vctAddress.push_back(0xa2);
-    vctAddress.push_back(0x00);
-    vctAddress.push_back(0x40);
-    vctAddress.push_back(0x54);
-    vctAddress.push_back(0xd3);
-    vctAddress.push_back(0x1b);
-    edname = "ED02";
-    AddNewEndDevice(edname, vctAddress);
-
-    vctAddress[5] = 0x2c;
-    vctAddress[6] = 0x53;
-    vctAddress[7] = 0x28;
-    edname = "ED01";
-    AddNewEndDevice(edname, vctAddress);
-
     bTXThreadExit = false;
     TXThread = boost::thread(&CDispatcher::processTX, this);
 
@@ -51,8 +33,8 @@ void CDispatcher::AddFrameToTransmit(std::vector<uint8_t> newframe)
     if(CZBFrame::getAPIIdentifierFromRFDataFrame(newframe)!=API_AT_REMOTE_COMMAND_REQUEST)
     {
         std::cerr << "AddFrameToTransmit: this is not a API_AT_REMOTE_COMMAND_REQUEST API identifier";
-	//LOG->ERROR_WARNING_LOG("AddFrameToTransmit: this is not a API_AT_REMOTE_COMMAND_REQUEST API identifier");
-	return;
+        //LOG->ERROR_WARNING_LOG("AddFrameToTransmit: this is not a API_AT_REMOTE_COMMAND_REQUEST API identifier");
+        return;
     }
 
     address.assign(newframe.begin()+5,newframe.end()+12);
@@ -93,7 +75,7 @@ void CDispatcher::processTX(void)
                     switch (stxf.enFS)
                     {
 
-                    case OK: // sended data is OK, must delete from the list
+                    case OK: // sended data is OK, must deleted from the list
                         zbptr->setEnFrameStatus(vctFrameID[i],F_DELETE);
                         break;
 
@@ -153,12 +135,9 @@ void CDispatcher::processTX(void)
                         std::cout << "processTX: deleting mapTXbuffer at __key " << (unsigned short)vctFrameID[i] << std::endl;
                         zbptr->freeFrameID(vctFrameID[i]);
                         break;
-
                     default:
                         break;
-
                     }
-
                 }
             }
             catch(std::exception &e)
@@ -166,7 +145,6 @@ void CDispatcher::processTX(void)
                 std::cerr << e.what();
                 continue;
             }
-
         }
 
         try{
@@ -264,11 +242,10 @@ void CDispatcher::addRFFrame(const std::vector<uint8_t> _vctRFData)
     }
 }
 
-void CDispatcher::Function_API_AT_REMOTE_COMMAND_RESPONSE(std::vector<uint8_t> _vctRFData){
+void CDispatcher::Function_API_AT_REMOTE_COMMAND_RESPONSE(std::vector<uint8_t> _vctRFData)
+{
     uint8_t frameID = _vctRFData[0];
-
     std::cout << "frameID: " << (unsigned short) frameID << std::endl;
-
     if(frameID==0)
     {
         std::cerr << "Function_API_AT_REMOTE_COMMAND_RESPONSE: error with frameID of " << (unsigned short) frameID << std::endl;
@@ -345,7 +322,8 @@ void CDispatcher::Function_API_AT_REMOTE_COMMAND_RESPONSE(std::vector<uint8_t> _
         break;
     }
 
-    for(size_t k=14;k<_vctRFData.size();k++){
+    for(size_t k=14;k<_vctRFData.size();k++)
+    {
         vctCommandData.push_back(_vctRFData[k]);
     }
 
@@ -367,9 +345,11 @@ uint8_t CDispatcher::calculateChechSumUINT8(std::vector<uint8_t> &_vctBuffer)
     return var_return;
 }
 
-void CDispatcher::Function_API_AT_REMOTE_COMMAND_REQUEST(const std::string &_sEDName, const std::vector<uint8_t> _vctCommand, const std::vector<uint8_t> _vctRFData){
+void CDispatcher::Function_API_AT_REMOTE_COMMAND_REQUEST(const std::string &_sEDName, const std::vector<uint8_t> _vctCommand, const std::vector<uint8_t> _vctRFData)
+{
     CZBEndDevicePtr czbed = getZBEndDeviceByName(_sEDName);
-    if(czbed.get()==NULL){
+    if(czbed.get()==NULL)
+    {
         std::cerr << "Function_API_AT_REMOTE_COMMAND_REQUEST: end device " << czbed->GetAddress() << " not found." << std::endl;
         //TODO: throw this ??
         return;
@@ -381,7 +361,6 @@ void CDispatcher::Function_API_AT_REMOTE_COMMAND_REQUEST(const std::string &_sED
 
 void CDispatcher::Function_API_AT_REMOTE_COMMAND_REQUEST(const std::vector<uint8_t> &address, const std::vector<uint8_t> &_vctCommand, const std::vector<uint8_t> &_vctCommandData)
 {
-
     uint8_t delimeter = 0x7E;
     uint8_t MSB;
     uint8_t LSB;
@@ -454,8 +433,10 @@ void CDispatcher::Function_API_AT_REMOTE_COMMAND_REQUEST(const std::vector<uint8
     //SerialPort.SendBuffer(frame);
 }
 
-void CDispatcher::SendCommand(const std::string &_sEDName, const std::vector<uint8_t> _vctCommand, const std::vector<uint8_t> _vctRFData){
-    if(_sEDName.compare("local")==0){
+void CDispatcher::SendCommand(const std::string &_sEDName, const std::vector<uint8_t> _vctCommand, const std::vector<uint8_t> _vctRFData)
+{
+    if(_sEDName.compare("local")==0)
+    {
         return; // not local commands in this moment
     }
     Function_API_AT_REMOTE_COMMAND_REQUEST(_sEDName, _vctCommand, _vctRFData);
@@ -480,13 +461,14 @@ void CDispatcher::Function_API_RX_IO_DATA_64bit_ADDRESS(std::vector<uint8_t> _vc
     ReadSample(vctRFData,vctAddress);
 }
 
-void CDispatcher::AddDataToZBED( CZBEndDevicePtr zbptr, const std::string & sDataChannel, const uint16_t u16d , const ptime &_ptime ){
+void CDispatcher::AddDataToZBED( CZBEndDevicePtr zbptr, const std::string & sDataChannel, const uint16_t u16d , const ptime &_ptime )
+{
     if(zbptr.get()!=NULL)
         zbptr->AddData( sDataChannel,u16d,_ptime);
 }
 
-void CDispatcher::ReadSample(std::vector<uint8_t> &_vctRFData, std::vector<uint8_t> &_vctAddress){
-
+void CDispatcher::ReadSample(std::vector<uint8_t> &_vctRFData, std::vector<uint8_t> &_vctAddress)
+{
     uint8_t samples = _vctRFData[0];
     uint16_t sCI = ( ((unsigned short)(_vctRFData[1])) << 8 ) + ((unsigned short)(_vctRFData[2]))  ; // ChannelIndicator
     uint16_t k = 0;
@@ -533,7 +515,7 @@ void CDispatcher::ReadSample(std::vector<uint8_t> &_vctRFData, std::vector<uint8
             (sCI & CI_ADC2) || (sCI & CI_ADC3) ||
             (sCI & CI_ADC4)  || (sCI & CI_ADC5) )
         {
-	    //unit16_t dat;
+            //unit16_t dat;
             if ((sCI & CI_ADC0) != 0x0000) {
                 //dat = (uint16_t(vctSamples[sample_size*i+k*2]) << 8 ) + uint16_t(vctSamples[sample_size*i+1+k*2]);
                 AddDataToZBED(zbptr,"D0", (uint16_t(vctSamples[sample_size*i+k*2]) << 8 ) + uint16_t(vctSamples[sample_size*i+1+k*2]),mytime);
@@ -564,7 +546,8 @@ void CDispatcher::ReadSample(std::vector<uint8_t> &_vctRFData, std::vector<uint8
     }
 }
 
-CZBEndDevicePtr CDispatcher::getZBEndDeviceByAddress(const std::vector<uint8_t> &_vctAddress){
+CZBEndDevicePtr CDispatcher::getZBEndDeviceByAddress(const std::vector<uint8_t> &_vctAddress)
+{
     std::map<std::string,CZBEndDevicePtr>::iterator it;
 
     for(it=mapEndDevices.begin();it!=mapEndDevices.end();++it)
@@ -577,16 +560,17 @@ CZBEndDevicePtr CDispatcher::getZBEndDeviceByAddress(const std::vector<uint8_t> 
     return CZBEndDevicePtr();
 }
 
-CZBEndDevicePtr CDispatcher::getZBEndDeviceByName(const std::string &_name){
+CZBEndDevicePtr CDispatcher::getZBEndDeviceByName(const std::string &_name)
+{
     std::map<std::string,CZBEndDevicePtr>::iterator it;
     for(it=mapEndDevices.begin();it!=mapEndDevices.end();++it)
     {
         std::string str = it->first;
-        if(str.compare(_name)==0){
+        if(str.compare(_name)==0)
+	{
             return it->second;
         }
     }
-
     return CZBEndDevicePtr();
 }
 
@@ -602,8 +586,6 @@ void CDispatcher::CheckAndAddRawFrames(std::vector<uint8_t> _vctRawBuffer)
         std::cerr << "CheckAndAddRawFrames: bad_rf_frame throw";
         return;
     }
-
-
 }
 
 std::vector<std::string> CDispatcher::getZBEDListNames(void)

@@ -8,19 +8,12 @@
 #ifndef _CENDDEVICE_H
 #define	_CENDDEVICE_H
 
-#include "common.h"
-
 #include <time.h>
 #include <pthread.h>
 #include <map>
 #include <vector>
 #include <string>
-
-// esta estructura es para el paso de informacion desde la clase hacia la aplicacion.
-/*typedef struct stChannelNames {
-    char **cNames; // registro de nombres de canales
-    size_t namesCount; // cantidad de nombres, o punteros de cNames
-};*/
+#include "common.h"
 
 enum enAddressLenght { _32bits=32, _64bits=64 };
 
@@ -37,6 +30,7 @@ class CEndDevice {
 public:
     CEndDevice();
     CEndDevice(const CEndDevice& orig);
+    CEndDevice(const std::string &_name, const std::string &_address);
 
     virtual ~CEndDevice();
 
@@ -80,6 +74,8 @@ public:
 
     void sendSignalDataChange(std::string _edName, std::string _channels, EDDATA _edData);
 
+    virtual void 
+
 private:
     std::string sName; // ordinary name of the device.
     bool bSaveData; // the ED will save the data?
@@ -91,5 +87,7 @@ private:
 
 typedef CEndDevice::CEndDevicePtr CEndDevicePtr;
 typedef CEndDevice::signalChannelPtr signalChannelPtr;
+
+extern std::list<CEndDevicePtr> *end_devices_list;
 
 #endif	/* _CENDDEVICE_H */

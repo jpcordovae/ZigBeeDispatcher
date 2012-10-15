@@ -3,12 +3,12 @@
 
 CZBDataBase *DB;
 
-CZBDataBase::CZBDataBase():log_file_name("log_db.txt"),isConnected(false)
+CZBDataBase::CZBDataBase():log_file_name("log/log_db.txt"),isConnected(false)
 {
     log_file.open(log_file_name.c_str(),std::fstream::in | std::fstream::out | std::fstream::app);
     if(!log_file.is_open())
     {
-	std::cerr << "can't open log file " << log_file_name << std::endl;
+	std::cerr << "CZDataBase Error: can't open log file " << log_file_name << std::endl;
     }
 }
 
@@ -61,7 +61,7 @@ bool CZBDataBase::connect()
 
 bool CZBDataBase::disconnect(void)
 {
-    
+    return true;
 }
 
 void CZBDataBase::log_data(string_ptr _variable_name, string_ptr _value)
@@ -123,3 +123,10 @@ void CZBDataBase::local_log(char *_msg)
 
     log_file << _msg << std::endl; //TODO: put timestamp
 }
+
+bool CZBDataBase::is_connected(void)
+{
+    return isConnected;
+}
+
+

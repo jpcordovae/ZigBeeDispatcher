@@ -43,7 +43,13 @@ class zb_exception_base : public boost::exception , public std::exception { };
 
 class CEndDeviceException : public zb_exception_base { };
 
-class bad_rf_frame : public zb_exception_base { };
+ class bad_rf_frame : public zb_exception_base { };
+
+ boost::uint8_t char2hexvalue(const char _data);
+
+ boost::uint8_t byte2unit8_t(const char _data[]);
+
+std::vector<boost::uint8_t> string2hex(std::string _str);
 
 #endif	/* _COMMON_H */
 

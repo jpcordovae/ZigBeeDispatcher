@@ -7,10 +7,10 @@
 
 #include <vector>
 #include <map>
-
-
-#include "cenddevice.h"
 #include <iostream>
+#include "cenddevice.h"
+
+std::list<CEndDevicePtr> *end_devices_list;
 
 CEndDevice::CEndDevice() {
     //memset(ucAddress, 0, 8);
@@ -19,11 +19,17 @@ CEndDevice::CEndDevice() {
 CEndDevice::CEndDevice(const CEndDevice& orig) {
 }
 
-CEndDevice::~CEndDevice( ) {
+CEndDevice::~CEndDevice( ){
 }
 
 void CEndDevice::SetName(const std::string &_sName) {
     sName = _sName;
+}
+
+CEndDevice::CEndDevice(const std::string &_name, const std::string &_address)
+{
+    sName = _name;
+    SetAddress(string2hex(_address));
 }
 
 std::string CEndDevice::GetName(void) {
@@ -35,23 +41,23 @@ void CEndDevice::AddDataChannel(const std::string &_sDataChannel) {
     std::cout << "adding channel " << _sDataChannel << std::endl;
 }
 
-size_t CEndDevice::GetDataChannelCount(std::string _sDataChannel) {
+size_t CEndDevice::GetDataChannelCount(std::string _sDataChannel)
+{
     return mapDataContainer[_sDataChannel]->size();
 }
-
-
 
 //void *CEndDevice::GetDataValue(std::string _sDataChannel, size_t _stPosition) {
 ////    std::vector<void *> *vTmp = this->map_DataContainer[_sDataChannel];
 ////    return vTmp->at(_stPosition);
 //}
 
-size_t CEndDevice::getChannelCount(void) {
+size_t CEndDevice::getChannelCount(void)
+{
     return mapDataContainer.size();
 }
 
-std::vector<std::string> CEndDevice::getChannelNames(void) {
-
+std::vector<std::string> CEndDevice::getChannelNames(void)
+{
     std::vector<std::string> vctNames;
     std::map<std::string,ContainerPtr >::iterator it;
 
@@ -132,7 +138,7 @@ bool CEndDevice::CompareName(const std::string &_sName) {
     return false;
 }
 
-void CEndDevice::sendSignalDataChange(std::string _edName, std::string _channels, EDDATA _edData)
-{
-    // .
-}
+//void CEndDevice::sendSignalDataChange(std::string _edName, std::string _channels, EDDATA _edData)
+//{
+    // 
+//}

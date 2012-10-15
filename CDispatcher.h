@@ -6,7 +6,6 @@
 #include "czbenddevice.h"
 #include "cevent.h"
 #include "czbframe.h"
-//#include "czbconfiguration.h"
 
 #include <vector>
 #include <stdint.h>
@@ -61,13 +60,11 @@ public:
     boost::signals2::connection connectEDDataChanged(const std::string &_ed, const CEndDevice::signalChannel::slot_type & subscriber)
     {
         CZBEndDevicePtr czbed = getZBEndDeviceByName(_ed);
-
         if(czbed.get()==NULL)
         {
             std::cerr << "connectEDDataChanged: end device " << _ed << " not found";
             return boost::signals2::connection();
         }
-
         return czbed->connectChannelToFunction(subscriber);
     }
 
